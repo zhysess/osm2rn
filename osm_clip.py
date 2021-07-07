@@ -4,7 +4,8 @@ Shows how to write a handler for the different types of objects.
 """
 import osmium as o
 import argparse
-
+import json
+from coords_transform import gcj02_to_wgs84
 
 class NodeRetrievingHandler(o.SimpleHandler):
 
@@ -65,21 +66,25 @@ def contains(min_lat, min_lng, max_lat, max_lng, lat, lng):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--min_lat', type=float, default=39.8451, help='the min lat of the interested region')
-    parser.add_argument('--min_lng', type=float, default=116.2810, help='the min lng of the interested region')
-    parser.add_argument('--max_lat', type=float, default=39.9890, help='the max lat of the interested region')
-    parser.add_argument('--max_lng', type=float, default=116.4684, help='the max lng of the interested region')
+    parser.add_argument('--conf_path', help='the input path of configuration file')
     parser.add_argument('--input_path', help='the input path of the original osm data')
     parser.add_argument('--output_path', help='the output path of the clipped osm data')
-
     opt = parser.parse_args()
     print(opt)
+    with open(opt.conf_path, 'r') as f:
+        conf = json.load(f)
+    min_lat = conf['dataset']['min_lat']
+    min_lng = conf['dataset']['min_lng']
+    max_lat = conf['dataset']['max_lat']
+    max_lng = conf['dataset']['max_lng']
+    min_lng, min_lat = gcj02_to_wgs84(min_lng, min_lat)
+    max_lng, max_lat = gcj02_to_wgs84(max_lng, max_lat)
 
     # go through the ways to find all relevant nodes
-    nh = NodeRetrievingHandler(opt.min_lat, opt.min_lng, opt.max_lat, opt.max_lng)
+    nh = NodeRetrievingHandler(min_lat, min_lng, max_lat, max_lng)
     nh.apply_file(opt.input_path, locations=True)
     # go through the file again and write out the data
     writer = o.SimpleWriter(opt.output_path)
-    hh = HighwayRetrievingHandler(opt.min_lat, opt.min_lng, opt.max_lat, opt.max_lng, nh.nodes, writer)
+    hh = HighwayRetrievingHandler(min_lat, min_lng, max_lat, max_lng, nh.nodes, writer)
     hh.apply_file(opt.input_path, locations=True)
     writer.close()
