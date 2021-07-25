@@ -109,9 +109,9 @@ if __name__ == '__main__':
     # parser.add_argument('--conf_path', help='the input path of configuration file')
     # opt = parser.parse_args()
     # print(opt)
-    input_path = '../data/10km_didi_traj/rn/interest_region.osm.pbf'
-    output_path = '../data/10km_didi_traj/rn/osm'
-    conf_path = '../data/10km_didi_traj/conf_10km.json'
+    input_path = '../data/didi_5km_0707/rn/interest_region.osm.pbf'
+    output_path = '../data/didi_5km_0707/rn/osm'
+    conf_path = '../data/didi_5km_0707/conf_5km_0707.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
     min_lat = conf['dataset']['min_lat']

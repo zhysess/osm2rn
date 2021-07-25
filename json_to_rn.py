@@ -1,6 +1,7 @@
 import networkx as nx
 from osgeo import ogr
 import json
+import argparse
 from shapely.geometry import Polygon, LineString, MultiLineString
 
 
@@ -57,9 +58,9 @@ if __name__ == '__main__':
     # parser.add_argument('--conf_path', help='the input path of configuration file')
     # opt = parser.parse_args()
     # print(opt)
-    input_path = '../data/10km_didi_traj/rn/didi_10km_road.json'
-    output_path = '../data/10km_didi_traj/rn/didi'
-    conf_path = '../data/10km_didi_traj/conf_10km.json'
+    input_path = '../data/didi_5km_0707/rn/didi_5km_0707.json'
+    output_path = '../data/didi_5km_0707/rn/didi'
+    conf_path = '../data/didi_5km_0707/conf_5km_0707.json'
     with open(conf_path, 'r') as f:
         conf = json.load(f)
     min_lat = conf['dataset']['min_lat']
